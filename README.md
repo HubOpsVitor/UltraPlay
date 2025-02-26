@@ -1,4 +1,6 @@
-# UltraPlay | @author Allan vítor
+![GitHub License](https://img.shields.io/github/license/HubOpsVitor/vitorti?style=for-the-badge)
 
-![GitHub License](https://img.shields.io/github/license/HubOpsVitor/UltraPlay) <br>
-Projeto de Desenvolvimento de sistemas desktop do SENAC SP. 
+# Vítor-TI
+Desenvolvimento de um sistema desktop para gestão de ordem de serviços
+## Autor
+Allan Vítor

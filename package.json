@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/HubOpsVitor/vitorti.git"
+    "url": "git+https://github.com/HubOpsVitor/ultraplay.git"
   },
   "author": "Allan Vítor",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/HubOpsVitor/vitorti/issues"
+    "url": "https://github.com/HubOpsVitor/ultraplay/issues"
   },
-  "homepage": "https://github.com/HubOpsVitor/vitorti#readme",
+  "homepage": "https://github.com/HubOpsVitor/ultraplay#readme",
   "dependencies": {
     "electron": "^34.2.0"
   }
