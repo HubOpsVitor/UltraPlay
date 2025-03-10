@@ -2,7 +2,7 @@ console.log("Processo principal")
 
 const { app, BrowserWindow, nativeTheme, Menu, ipcMain } = require('electron')
 
-//Esta linha está relacionada com o preload.js
+// Esta linha está relacionada ao preload.js
 const path = require('node:path')
 
 // Janela principal
@@ -16,27 +16,17 @@ const createWindow = () => {
         //autoHideMenuBar: true,
         //minimizable: false,
         resizable: false,
-        // Ativação do preload.js
+        //ativação do preload.js
         webPreferences: {
-          preload: path.join(__dirname, 'preload.js')
-      }      
+            preload: path.join(__dirname, 'preload.js')
+        }
     })
 
     // menu personalizado
     Menu.setApplicationMenu(Menu.buildFromTemplate(template))
 
     win.loadFile('./src/views/index.html')
-
-    // recebimento dos pedidos do renderizador para abertura das janelas (botoes)
-    ipcMain.on('client-window', () => {
-      clientWindow()
-    })
-    
-    ipcMain.on('os-window', () => {
-      osWindow()
-    })
 }
-
 
 // Janela sobre
 function aboutWindow() {
@@ -50,7 +40,7 @@ function aboutWindow() {
         about = new BrowserWindow({
             width: 360,
             height: 220,
-           //autoHideMenuBar: true,
+            autoHideMenuBar: true,
             resizable: false,
             minimizable: false,
             parent: main,
@@ -61,41 +51,41 @@ function aboutWindow() {
     about.loadFile('./src/views/sobre.html')
 }
 
-// Janela clientes
+// Janela cliente
 let client
 function clientWindow() {
-    nativeTheme.themeSource = 'dark'
+    nativeTheme.themeSource = 'light'
     const main = BrowserWindow.getFocusedWindow()
     if(main) {
         client = new BrowserWindow({
-            width: 420,
-            height: 320,
+            width: 1010,
+            height: 680,
             //autoHideMenuBar: true,
             resizable: false,
             parent: main,
             modal: true
         })
     }
-    client.loadFile('./src/views/cliente.html')  
-    client.center() 
+    client.loadFile('./src/views/cliente.html') 
+    client.center() //iniciar no centro da tela   
 }
 
 // Janela OS
 let os
 function osWindow() {
-    nativeTheme.themeSource = 'dark'
+    nativeTheme.themeSource = 'light'
     const main = BrowserWindow.getFocusedWindow()
     if(main) {
         os = new BrowserWindow({
-            width: 1010,
-            height: 720,
+            width: 1020,
+            height: 810,
            // autoHideMenuBar: true,
             resizable: false,
             parent: main,
             modal: true
         })
     }
-    os.loadFile('./src/views/os.html')   
+    os.loadFile('./src/views/os.html')
     os.center()
 }
 
@@ -194,3 +184,12 @@ const template = [
         ]
     }
 ]
+
+// recebimento dos pedidos do renderizador para abertura de janelas (botões) autorizado no preload.js
+ipcMain.on('client-window', () => {
+    clientWindow()
+})
+
+ipcMain.on('os-window', () => {
+    osWindow()
+})
