@@ -9,16 +9,97 @@
     <!-- CSS personalizado -->
     <link rel="stylesheet" href="../public/css/style.css">
     <!-- impedir a execução de scripts externos ou não autorizados -->
-     <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline'">
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline'">
 </head>
 <body>
     <div class="container">
-        <h1>OS</h1>
+        <h1>Ordem de Serviço</h1>
+
+        <form id="frmServiceOrder" class="mt-2 row g-3">
+            <!-- Buscar ordem de serviço -->
+            <div class="col-md-6">
+                <input type="text" class="form-control" id="searchServiceOrder" maxlength="30" spellcheck="false" placeholder="Número da OS">
+            </div>
+            <div class="col-md-4">
+                <button type="button" class="btn btn-dark" id="btnSearch" onclick="searchServiceOrder()">Buscar</button>
+            </div>
+            <!-- Linha -->
+            <hr class="mt-4 border border-primary border -1">
+
+            <!-- Número da OS -->
+            <div class="col-md-6">
+                <label for="inputOrderNumber" class="form-label">Número da Ordem de Serviço</label>
+                <input type="text" class="form-control" id="inputOrderNumber" maxlength="20" required>
+            </div>
+
+            <!-- Cliente -->
+            <div class="col-md-6">
+                <label for="inputClientName" class="form-label">Cliente</label>
+                <input type="text" class="form-control" id="inputClientName" spellcheck="false" required maxlength="30">
+            </div>
+
+            <!-- Descrição do Serviço -->
+            <div class="col-md-12">
+                <label for="inputServiceDescription" class="form-label">Descrição do Serviço</label>
+                <textarea class="form-control" id="inputServiceDescription" required maxlength="255"></textarea>
+            </div>
+
+            <!-- Data de Abertura -->
+            <div class="col-md-4">
+                <label for="inputStartDate" class="form-label">Data de Abertura</label>
+                <input type="date" class="form-control" id="inputStartDate" required>
+            </div>
+
+            <!-- Data de Conclusão -->
+            <div class="col-md-4">
+                <label for="inputEndDate" class="form-label">Data de Conclusão</label>
+                <input type="date" class="form-control" id="inputEndDate">
+            </div>
+
+            <!-- Status da OS -->
+            <div class="col-md-4">
+                <label for="inputStatus" class="form-label">Status</label>
+                <select class="form-select" id="inputStatus" required>
+                    <option value="">Selecione o Status</option>
+                    <option value="aberta">Aberta</option>
+                    <option value="em_andamento">Em Andamento</option>
+                    <option value="concluida">Concluída</option>
+                    <option value="cancelada">Cancelada</option>
+                </select>
+            </div>
+
+            <!-- Responsável pela execução -->
+            <div class="col-md-6">
+                <label for="inputResponsible" class="form-label">Responsável pela Execução</label>
+                <input type="text" class="form-control" id="inputResponsible" required maxlength="50">
+            </div>
+           
+            <!-- CPF -->
+            <div class="col-md-4">
+                <label for="inputCPFClient" class="form-label">CPF</label>
+                <input type="text" class="form-control" id="inputCPFClient" spellcheck="false" maxlength="15">
+            </div>
+
+            <!-- Observações -->
+            <div class="col-md-12">
+                <label for="inputNotes" class="form-label">Observações</label>
+                <textarea class="form-control" id="inputNotes" maxlength="500"></textarea>
+            </div>
+
+            <!-- Botões -->
+            <div class="mt-5">
+                <button type="submit" class="btn btn-success" id="btnCreate">Criar</button>
+                <button type="submit" class="btn btn-warning" id="btnUpdate">Editar</button>
+                <button type="button" class="btn btn-danger" id="btnDelete">Cancelar</button>
+                <button type="reset" class="btn" id="btnReset" onclick="resetForm()"></button>
+            </div>
+
+        </form>
     </div>
 
-     <!-- Bootstrap -->
-     <script src="../public/js/bootstrap.min.js"></script>
-     <!-- Scripts -->
-     <script src="../public/js/script.js"></script>
+    <!-- Bootstrap -->
+    <script src="../public/js/bootstrap.min.js"></script>
+    <!-- Scripts -->
+    <script src="../public/js/script.js"></script>
 </body>
 </html>
