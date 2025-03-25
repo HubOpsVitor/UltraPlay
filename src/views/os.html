@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ordem de Serviço</title>
+    <link rel="stylesheet" href="../public/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../public/css/style.css">
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline'">
+</head>
+<body>
+    <div class="container mt-4">
+        <form class="row g-3">
+            <!-- OS, Data e Buscar Cliente -->
+            <div class="col-md-3">
+                <label class="form-label">Nº OS</label>
+                <input type="text" class="form-control" id="txtOs" disabled>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Data</label>
+                <input type="text" class="form-control" id="txtData" disabled>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Buscar Cliente</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="inputSearchClient" maxlength="30">
+                    <span class="input-group-text">
+                        <img src="../public/img/search.png" alt="lupa" width="20">
+                    </span>
+                </div>
+            </div>
+
+            <!-- Nome, Telefone e CPF -->
+            <div class="col-md-5">
+                <label class="form-label">Nome</label>
+                <input type="text" class="form-control" id="inputNameClient" disabled>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Telefone</label>
+                <input type="text" class="form-control" id="inputPhoneClient" disabled>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">CPF</label>
+                <input type="text" class="form-control" id="inputCPFClient" disabled>
+            </div>
+            
+            <hr class="mt-4">
+
+            <!-- Status, Equipamento e Número de Série -->
+            <div class="col-md-4">
+                <label class="form-label">Status da OS</label>
+                <select class="form-select">
+                    <option>Selecione</option>
+                    <option>Aberta</option>
+                    <option>Em andamento</option>
+                    <option>Aguardando peças</option>
+                    <option>Finalizada</option>
+                    <option>Cancelada</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Console</label>
+                <select class="form-select">
+                    <option>Selecione</option>
+                    <option>Playstation 4</option>
+                    <option>Playstation 5</option>
+                    <option>Xbox Series X</option>
+                    <option>Xbox Series S</option>
+                    <option>Nintendo Switch</option>
+                    <option>Nintendo Switch 2</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Modelo</label>
+                <input type="text" class="form-control">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Número de série</label>
+                <input type="text" class="form-control">
+            </div>
+
+            <!-- Problema, Técnico e Valor -->
+            <div class="col-md-6">
+                <label class="form-label">Problema relatado</label>
+                <input type="text" class="form-control">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Diagnóstico técnico</label>
+                <input type="text" class="form-control">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Observações</label> <!--Aqui vão os periféricos e observações do console (Exemplo: O console está riscado, o cliente deixou um dos controles e etc...)-->
+                <input type="text" class="form-control">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Técnico</label>
+                <input type="text" class="form-control">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Valor</label>
+                <input type="text" class="form-control">
+            </div>
+            
+            <!-- Botões -->
+            <div class="d-flex justify-content-center gap-2 mt-3">
+                <button type="button" class="btn btn-success">Gerar OS</button>
+                <button type="button" class="btn btn-primary">Buscar OS</button>
+                <button type="button" class="btn btn-warning">Editar OS</button>
+                <button type="button" class="btn btn-danger">Excluir OS</button>
+                <button type="button" class="btn btn-secondary">Imprimir OS</button>
+            </div>
+        </form>
+    </div>
+    <script src="../public/js/bootstrap.min.js"></script>
+</body>
+</html>
