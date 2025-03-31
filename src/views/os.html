@@ -10,7 +10,7 @@
 </head>
 <body>
     <div class="container mt-4">
-        <form class="row g-3">
+        <form class="row g-3" id="frmOS">
             <!-- OS, Data e Buscar Cliente -->
             <div class="col-md-3">
                 <label class="form-label">Nº OS</label>
@@ -49,7 +49,7 @@
             <!-- Status, Equipamento e Número de Série -->
             <div class="col-md-4">
                 <label class="form-label">Status da OS</label>
-                <select class="form-select">
+                <select class="form-select" id="inputStatusOS">
                     <option>Selecione</option>
                     <option>Aberta</option>
                     <option>Em andamento</option>
@@ -60,7 +60,7 @@
             </div>
             <div class="col-md-4">
                 <label class="form-label">Console</label>
-                <select class="form-select">
+                <select class="form-select" id="inputEquipamento">
                     <option>Selecione</option>
                     <option>Playstation 4</option>
                     <option>Playstation 5</option>
@@ -72,45 +72,46 @@
             </div>
             <div class="col-md-4">
                 <label class="form-label">Modelo</label>
-                <input type="text" class="form-control">
+                <input type="text" class="form-control" id="inputModelo">
             </div>
             <div class="col-md-4">
                 <label class="form-label">Número de série</label>
-                <input type="text" class="form-control">
+                <input type="text" class="form-control" id="inputNumeroSerie">
             </div>
 
             <!-- Problema, Técnico e Valor -->
             <div class="col-md-6">
                 <label class="form-label">Problema relatado</label>
-                <input type="text" class="form-control">
+                <input type="text" class="form-control" id="inputProblemaRelatado">
             </div>
             <div class="col-md-6">
                 <label class="form-label">Diagnóstico técnico</label>
-                <input type="text" class="form-control">
+                <input type="text" class="form-control" id="inputDiagnosticoTecnico">
             </div>
             <div class="col-md-4">
-                <label class="form-label">Observações</label> <!--Aqui vão os periféricos e observações do console (Exemplo: O console está riscado, o cliente deixou um dos controles e etc...)-->
-                <input type="text" class="form-control">
+                <label class="form-label">Observações</label> 
+                <input type="text" class="form-control" id="inputObservacoes">
             </div>
             <div class="col-md-6">
                 <label class="form-label">Técnico</label>
-                <input type="text" class="form-control">
+                <input type="text" class="form-control" id="inputTecnico">
             </div>
             <div class="col-md-3">
                 <label class="form-label">Valor</label>
-                <input type="text" class="form-control">
+                <input type="text" class="form-control" id="inputValor">
             </div>
             
             <!-- Botões -->
             <div class="d-flex justify-content-center gap-2 mt-3">
-                <button type="button" class="btn btn-success">Gerar OS</button>
-                <button type="button" class="btn btn-primary">Buscar OS</button>
-                <button type="button" class="btn btn-warning">Editar OS</button>
-                <button type="button" class="btn btn-danger">Excluir OS</button>
-                <button type="button" class="btn btn-secondary">Imprimir OS</button>
+                <button type="submit" class="btn btn-success" id="btnGerarOS">Gerar OS</button>
+                <button type="button" class="btn btn-primary" id="btnBuscarOS">Buscar OS</button>
+                <button type="submit" class="btn btn-warning" id="btnEditarOS">Editar OS</button>
+                <button type="button" class="btn btn-danger" id="btnExcluirOS">Excluir OS</button>
+                <button type="button" class="btn btn-secondary" id="btnImprimirOS">Imprimir OS</button>
             </div>
         </form>
     </div>
     <script src="../public/js/bootstrap.min.js"></script>
+    <script src="rendererOs.js"></script>
 </body>
 </html>

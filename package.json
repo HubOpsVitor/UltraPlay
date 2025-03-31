@@ -19,6 +19,7 @@
   "homepage": "https://github.com/HubOpsVitor/ultraplay#readme",
   "dependencies": {
     "electron": "^34.2.0",
+    "jspdf": "^3.0.1",
     "mongoose": "^8.12.2"
   }
 }

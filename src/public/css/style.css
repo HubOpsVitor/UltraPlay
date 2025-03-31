@@ -1,30 +1,28 @@
 @charset "utf-8";
 
-/* Botoes (tela principal) */
+/* Botões (tela principal) */
 .button img {
     margin: 50px 15px 25px 15px;
     padding: 5px;
-    border: 1px solid #e8e8e8; 
+    border: 1px solid #e8e8e8;
     cursor: pointer;
 }
 
-/* Botão Reset */
+/* Botão reset */
 #btnReset {
     width: 48px;
     height: 48px;
-    background-image: url('../img/vassoura.png');
+    background-image: url('../img/clear.png');
     border: none;
     cursor: pointer;
     margin-left: 10px;
 }
 
-
-/* Rodapé */
+/* rodapé */
 footer {
     width: 100%;
-    height: 55px;
-    text-align: center;
-    background-color: #007acc;
+    height: 55px;   
+    background-color: #0078d7;
     position: fixed;
     bottom: 0;
     display: flex;
@@ -34,6 +32,6 @@ footer {
 
 footer p {
     color: #ffffff;
-    padding-top: 14px;
-    font-size: 1.2em;
+    padding-top: 7px;
+    font-size: 1.2em;    
 }

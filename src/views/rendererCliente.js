@@ -74,5 +74,17 @@ frmClient.addEventListener('submit', async (event) => {
     api.newClient(client)
 })
 
-//==========FIM DO cRUD================================
-//=====================================================
+// ============================================================
+// == Reset form ==============================================
+function resetForm() {
+    // Limpar os campos e resetar o formulário com as configurações pré definidas
+    location.reload()
+}
+
+// Recebimento do pedido do main para resetar o form
+api.resetForm((args) => {
+    resetForm()
+})
+
+// == Fim - reset form ========================================
+// ============================================================
