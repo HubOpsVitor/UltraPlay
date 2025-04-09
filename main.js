@@ -1,6 +1,6 @@
 console.log("Processo principal")
 
-const { app, BrowserWindow, nativeTheme, Menu, ipcMain, dialog, shell} = require('electron')
+const { app, BrowserWindow, nativeTheme, Menu, ipcMain, dialog, shell } = require('electron')
 
 // Esta linha está relacionada ao preload.js
 const path = require('node:path')
@@ -10,12 +10,14 @@ const { conectar, desconectar } = require('./database.js')
 
 // Importação do Schema Clientes da camada model
 const clientModel = require('./src/models/Clientes.js')
+const osModel = require('../UltraPlay/src/models/OrdemServico.js')
+
 
 // Importação do pacote jspdf (npm i jspdf)
 const { jspdf, default: jsPDF } = require('jspdf')
 
 // Importação da biblioteca FS (nativa do JavaScript) para manipulação de arquivos (no caso arquvios pdf)
-const fs = require ('fs')
+const fs = require('fs')
 
 
 // Janela principal
@@ -88,10 +90,13 @@ function clientWindow() {
 }
 
 // Janela OS
-let os
+let os;
+
 function osWindow() {
-    nativeTheme.themeSource = 'light'
-    const main = BrowserWindow.getFocusedWindow()
+    nativeTheme.themeSource = 'light'; // Configura o tema para 'light'
+    
+    const main = BrowserWindow.getFocusedWindow();
+    
     if (main) {
         os = new BrowserWindow({
             width: 1010,
@@ -99,12 +104,18 @@ function osWindow() {
             // autoHideMenuBar: true,
             resizable: false,
             parent: main,
-            modal: true
-        })
+            // Ativação do preload.js
+            webPreferences: {
+                preload: path.join(__dirname, 'preload.js')
+            },
+            modal: true // Corrigido: a vírgula foi movida para o lugar certo
+        });
     }
-    os.loadFile('./src/views/os.html')
-    os.center()
+
+    os.loadFile('./src/views/os.html');
+    os.center();
 }
+
 
 // Iniciar a aplicação
 app.whenReady().then(() => {
@@ -242,7 +253,7 @@ ipcMain.on('new-client', async (event, client) => {
             nomeCliente: client.nameCli,
             cpfCliente: client.cpfCli,
             emailCliente: client.emailCli,
-            foneCliente: client.phoneCli,
+            foneCliente: client.foneCli,
             cepCliente: client.cepCli,
             logradouroCliente: client.addressCli,
             numeroCliente: client.numberCli,
@@ -262,14 +273,14 @@ ipcMain.on('new-client', async (event, client) => {
             buttons: ['OK']
         }).then((result) => {
             //ação ao pressionar o botão (result = 0)
-            if(result.response === 0) {
+            if (result.response === 0) {
                 //enviar um pedido para o renderizador limpar os campos e resetar as configurações pré definidas (rótulo 'reset-form' do preload.js
                 event.reply('reset-form')
-            }    
+            }
         })
     } catch (error) {
         // se o código de erro for 11000 (cpf duplicado) enviar uma mensagem ao usuário
-        if(error.code === 11000) {
+        if (error.code === 11000) {
             dialog.showMessageBox({
                 type: 'error',
                 title: "Atenção!",
@@ -288,48 +299,162 @@ ipcMain.on('new-client', async (event, client) => {
 // == Fim - Clientes - CRUD Create
 // ============================================================
 
+
+// ============================================================
+// == OS - CRUD Create
+// recebimento do objeto que contém os dados da ordem de serviço
+ipcMain.on('new-os', async (event, osData) => {
+    // Importante! Teste de recebimento dos dados da ordem de serviço
+    console.log(osData)
+    
+    // Cadastrar a estrutura de dados no banco de dados MongoDB
+    try {
+        // Criar uma nova estrutura de dados usando a classe modelo. Atenção! Os atributos precisam ser idênticos ao modelo de dados OrdensDeServico.js e os valores são definidos pelo conteúdo do objeto osData
+        const newOS = new osModel({
+            statusOS: osData.statusOS,
+            equipamento: osData.equipamento,
+            numeroSerie: osData.numeroSerie,
+            problemaRelatado: osData.problemaRelatado,
+            diagnosticoTecnico: osData.diagnosticoTecnico,
+            observacoes: osData.observacoes,
+            tecnico: osData.tecnico,
+            valor: osData.valor
+        })
+        
+        // Salvar os dados da ordem de serviço no banco de dados
+        await newOS.save()
+        
+        // Mensagem de confirmação
+        dialog.showMessageBox({
+            // Customização
+            type: 'info',
+            title: "Aviso",
+            message: "Ordem de serviço criada com sucesso",
+            buttons: ['OK']
+        }).then((result) => {
+            // Ação ao pressionar o botão (result = 0)
+            if (result.response === 0) {
+                // Enviar um pedido para o renderizador limpar os campos e resetar as configurações pré-definidas (rótulo 'reset-form' do preload.js)
+                event.reply('reset-form')
+            }
+        })
+    } catch (error) {
+        // Se ocorrer algum erro (ex: validação de dados ou problemas no banco)
+        console.log(error)
+
+        // Caso o erro seja de dados duplicados (por exemplo, número de série já cadastrado), exibir a mensagem ao usuário
+        if (error.code === 11000) {
+            dialog.showMessageBox({
+                type: 'error',
+                title: "Atenção!",
+                message: "Número de Série já está cadastrado\nVerifique se digitou corretamente",
+                buttons: ['OK']
+            }).then((result) => {
+                if (result.response === 0) {
+                    // Limpar o campo de número de série, focar neste campo e destacar a borda em vermelho
+                }
+            })
+        }
+    }
+})
+
+// == Fim - OS - CRUD Create
+// ============================================================
+
+
 // ==========================================================
 // ===== Relatório de Clientes ==============================
 
 async function relatorioClientes() {
     try {
         // Passo 1: Consultar o banco de dados e obter a listagem de clientes cadastrados por ordem alfabética
-        const clientes = await clientModel.find().sort({ nomeCliente: 1 })
+        const clientes = await clientModel.find().sort({ nomeCliente: 1 });
         // teste de recebimento da listagem de clientes
-        //console.log(clientes)
-        // Passo 2:Formatação do documento pdf
-        // p - portrait | l - landscape | mm e a4 (folha)
-        const doc = new jsPDF('p', 'mm', 'a4')
-        // definir o tamanho da fonte (tamanho equivalente ao word)
-        doc.setFontSize(16)
-        // escrever um texto (título)
-        doc.text("Relatório de clientes", 14, 20)//x, y (mm)
-        // inserir a data atual no relatório
-        const dataAtual = new Date().toLocaleDateString('pt-BR')
-        doc.setFontSize(12)
-        doc.text(`Data: ${dataAtual}`, 165, 10)
-        // variável de apoio na formatação
-        let y = 45
-        doc.text("Nome", 14, y)
-        doc.text("Telefone", 80, y)
-        doc.text("E-mail", 130, y)
-        y += 5
-        // desenhar uma linha
-        doc.setLineWidth(0.5) // expessura da linha
-        doc.line(10, y, 200, y) // 10 (inicio) ---- 200 (fim)
+        //console.log(clientes);
+
+        // Passo 2: Formatação do documento pdf
+        // p - portrait | l - landscape | mm e a4 (folha A4 (210x297mm))
+        const doc = new jsPDF('p', 'mm', 'a4');
+
+        // Inserir imagem no documento pdf
+        // imagePath (caminho da imagem que será inserida no pdf)
+        // imageBase64 (uso da biblioteca fs par ler o arquivo no formato png)
+        const imagePath = path.join(__dirname, 'src', 'public', 'img', 'logo.png');
+        const imageBase64 = fs.readFileSync(imagePath, { encoding: 'base64' });
+        doc.addImage(imageBase64, 'PNG', 5, 8); //(5mm, 8mm x,y)
+
+        // Definir o tamanho da fonte (tamanho equivalente ao word)
+        doc.setFontSize(18);
+
+        // Escrever um texto (título)
+        doc.text("Relatório de clientes", 14, 45); // x, y (mm)
+
+        // Inserir a data atual no relatório
+        const dataAtual = new Date().toLocaleDateString('pt-BR');
+        doc.setFontSize(12);
+        doc.text(`Data: ${dataAtual}`, 165, 10);
+
+        // Variável de apoio na formatação
+        let y = 60;
+        doc.text("Nome", 14, y);
+        doc.text("Telefone", 95, y);
+        doc.text("E-mail", 130, y);
+
+        y += 5;
+
+        // Desenhar uma linha
+        doc.setLineWidth(0.5); // espessura da linha
+        doc.line(10, y, 200, y); // 10 (inicio) ---- 200 (fim)
+
+        // Renderizar os clientes cadastrados no banco
+        y += 10; // espaçamento da linha
+
+        // Percorrer o vetor clientes (obtido do banco) usando o laço forEach (equivale ao laço for)
+        clientes.forEach((c) => {
+            // Adicionar outra página se a folha inteira for preenchida (estratégia é saber o tamanho da folha)
+            if (y > 280) {
+                doc.addPage();
+                y = 20; // resetar a variável y
+
+                // Redesenhar o cabeçalho
+                doc.text("Nome", 14, y);
+                doc.text("Telefone", 95, y);
+                doc.text("E-mail", 130, y);
+                y += 5;
+                doc.setLineWidth(0.5);
+                doc.line(10, y, 200, y);
+                y += 10;
+            }
+
+            // Garantir que os dados são válidos antes de passar para o método doc.text()
+            doc.text(c.nomeCliente || "N/A", 14, y);
+            doc.text(c.foneCliente || "N/A", 95, y);
+            doc.text(c.emailCliente || "N/A", 130, y);
+
+            y += 10; // quebra de linha
+        });
+
+        // Adicionar numeração automática de páginas
+        const paginas = doc.internal.getNumberOfPages();
+        for (let i = 1; i <= paginas; i++) {
+            doc.setPage(i);
+            doc.setFontSize(10);
+            doc.text(`Página ${i} de ${paginas}`, 105, 290, { align: 'center' });
+        }
+
         // Definir o caminho do arquivo temporário e nome do arquivo
-        const tempDir = app.getPath('temp')
-        const filePath = path.join(tempDir, 'clientes.pdf')
-        // salvar temporariamente o arquivo
-        doc.save(filePath)
-        // abrir o arquivo no aplicativo padrão de leitura de pdf do computador do usuário
-        shell.openPath(filePath)
+        const tempDir = app.getPath('temp');
+        const filePath = path.join(tempDir, 'clientes.pdf');
+
+        // Salvar temporariamente o arquivo
+        doc.save(filePath);
+
+        // Abrir o arquivo no aplicativo padrão de leitura de pdf do computador do usuário
+        shell.openPath(filePath);
     } catch (error) {
-        console.log(error)
+        console.log(error);
     }
 }
-
-
 
 
 // ====== Fim Relatório de Clientes ==================

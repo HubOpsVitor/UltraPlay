@@ -18,7 +18,7 @@
         <form id="frmClient" class="mt-2 row g-3">
             <!-- Buscar cliente -->
             <div class="col-md-6">
-                <input type="text" class="form-control" id="searchClient" maxlength="30" spellcheck="false">
+                <input type="text" class="form-control" id="searchClient" maxlength="26" spellcheck="false">
             </div>
             <div class="col-md-4">
                 <button type="button" class="btn btn-dark" id="btnRead" onclick="searchClient()">Buscar</button>
@@ -41,7 +41,7 @@
             <!-- Email -->
             <div class="col-md-6">
                 <label for="inputEmailClient" class="form-label">E-mail</label>
-                <input type="email" class="form-control" id="inputEmailClient" spellcheck="false" maxlength="30" required>
+                <input type="email" class="form-control" id="inputEmailClient" spellcheck="false" maxlength="25" required>
             </div>
 
             <!-- Telefone -->
@@ -138,4 +138,20 @@
     <script src="rendererCliente.js"></script>
 </body>
 
+<script>
+    function formatCPF(input) {
+        let value = input.value.replace(/\D/g, ''); // Remove todos os caracteres não numéricos
+        if (value.length <= 3) {
+            input.value = value;
+        } else if (value.length <= 6) {
+            input.value = value.replace(/(\d{3})(\d{1,3})/, '$1.$2');
+        } else if (value.length <= 9) {
+            input.value = value.replace(/(\d{3})(\d{3})(\d{1,3})/, '$1.$2.$3');
+        } else {
+            input.value = value.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/, '$1.$2.$3-$4');
+        }
+    }
+</script>
+
 </html>
+

@@ -3,3 +3,10 @@ Tela Os
 De Equipamento para Console (Feito)
 ComboBOX no Console com os modelos (Feito)
 CAMPO DE OBSERVAÇÕES E Periféricos do console (Feito)
+
+---------------------------------
+
+Diminuir o técnico
+Campo de peças usadas
+Aumentar o campo de OBSERVAÇÕES
+Vassourinha na Tela OS
