@@ -18,36 +18,38 @@
         <form id="frmClient" class="mt-2 row g-3">
             <!-- Buscar cliente -->
             <div class="col-md-6">
-                <input type="text" class="form-control" id="searchClient" maxlength="26" spellcheck="false">
+                <input type="text" class="form-control" id="searchClient" maxlength="30" spellcheck="false">
             </div>
             <div class="col-md-4">
-                <button type="button" class="btn btn-dark" id="btnRead" onclick="searchClient()">Buscar</button>
+                <button type="button" class="btn btn-primary" id="btnRead" onclick="buscarCliente()">Buscar</button>
             </div>
             
-            <hr class="mt-4 border border-dark border-1">
+            <!-- Linha -->
+            <hr class="mt-4 border border-primary border -1">
 
             <!-- Nome -->
             <div class="col-md-8">
                 <label for="inputNameClient" class="form-label">Nome</label>
-                <input type="text" class="form-control" id="inputNameClient" spellcheck="false" required maxlength="30">
+                <input type="text" class="form-control" id="inputNameClient" spellcheck="false" required maxlength="26">
             </div>
 
             <!-- CPF -->
             <div class="col-md-4">
                 <label for="inputCPFClient" class="form-label">CPF</label>
-                <input type="text" class="form-control" id="inputCPFClient" spellcheck="false" maxlength="15" required>
+                <input type="text" class="form-control" id="inputCPFClient" spellcheck="false" maxlength="15" onblur="validarCPF()">                
             </div>
 
             <!-- Email -->
             <div class="col-md-6">
                 <label for="inputEmailClient" class="form-label">E-mail</label>
-                <input type="email" class="form-control" id="inputEmailClient" spellcheck="false" maxlength="25" required>
+                <input type="email" class="form-control" id="inputEmailClient" spellcheck="false" maxlength="30">
             </div>
 
             <!-- Telefone -->
             <div class="col-md-4">
                 <label for="inputPhoneClient" class="form-label">Telefone</label>
-                <input type="text" class="form-control" id="inputPhoneClient" spellcheck="false" maxlength="15" required>
+                <input type="text" class="form-control" id="inputPhoneClient" spellcheck="false" maxlength="15"
+                    required>
             </div>
 
             <!-- CEP -->
@@ -59,13 +61,15 @@
             <!-- Logradouro -->
             <div class="col-md-6">
                 <label for="inputAddressClient" class="form-label">Logradouro</label>
-                <input type="text" class="form-control" id="inputAddressClient" spellcheck="false" maxlength="30" required>
+                <input type="text" class="form-control" id="inputAddressClient" spellcheck="false" maxlength="30"
+                    required>
             </div>
 
             <!-- Número -->
             <div class="col-md-3">
                 <label for="inputNumberClient" class="form-label">Número</label>
-                <input type="text" class="form-control" id="inputNumberClient" spellcheck="false" maxlength="5" required>
+                <input type="text" class="form-control" id="inputNumberClient" spellcheck="false" maxlength="5"
+                    required>
             </div>
 
             <!-- Complemento -->
@@ -77,7 +81,8 @@
             <!-- Bairro -->
             <div class="col-md-5">
                 <label for="inputNeighborhoodClient" class="form-label">Bairro</label>
-                <input type="text" class="form-control" id="inputNeighborhoodClient" spellcheck="false" maxlength="30" required>
+                <input type="text" class="form-control" id="inputNeighborhoodClient" spellcheck="false" maxlength="30"
+                    required>
             </div>
 
             <!-- Cidade -->
@@ -135,23 +140,7 @@
     <!-- Bootstrap -->
     <script src="../public/js/bootstrap.min.js"></script>
     <!-- renderizador -->
-    <script src="rendererCliente.js"></script>
+     <script src="rendererCliente.js"></script>
 </body>
 
-<script>
-    function formatCPF(input) {
-        let value = input.value.replace(/\D/g, ''); // Remove todos os caracteres não numéricos
-        if (value.length <= 3) {
-            input.value = value;
-        } else if (value.length <= 6) {
-            input.value = value.replace(/(\d{3})(\d{1,3})/, '$1.$2');
-        } else if (value.length <= 9) {
-            input.value = value.replace(/(\d{3})(\d{3})(\d{1,3})/, '$1.$2.$3');
-        } else {
-            input.value = value.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/, '$1.$2.$3-$4');
-        }
-    }
-</script>
-
 </html>
-
