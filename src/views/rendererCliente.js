@@ -37,6 +37,14 @@ let arrayClient = []
 // a constante foco obtem o elemento html (input) identificado como 'searchClient'
 const foco = document.getElementById('searchClient')
 
+
+function teclaEnter(event) {
+    if(event.key === "Enter") {
+        event.preventDefault()
+        buscarCliente()
+    }
+}
+
 // Iniciar a janela de clientes alterando as propriedades de alguns elementos
 document.addEventListener('DOMContentLoaded', () => {
     // Desativar os botões
@@ -59,6 +67,31 @@ let complementClient = document.getElementById('inputComplementClient')
 let neighborhoodClient = document.getElementById('inputNeighborhoodClient')
 let cityClient = document.getElementById('inputCityClient')
 let ufClient = document.getElementById('inputUFClient')
+
+// ==========================================================
+// == Manipulação da tecla Enter ============================
+
+// Função para manipular o evento da tecla Enter
+function teclaEnter(event) {
+    // se a tecla Enter for pressionada
+    if (event.key === "Enter") {
+        event.preventDefault() // ignorar o comportamento padrão
+        // associar o Enter a busca pelo cliente
+        buscarCliente()
+    }
+}
+
+// Função para restaurar o padrão da tecla Enter (submit)
+function restaurarEnter() {
+    frmClient.removeEventListener('keydown', teclaEnter)
+}
+
+// "Escuta do evento Tecla Enter"
+frmClient.addEventListener('keydown', teclaEnter)
+
+// == Fim - manipulação tecla Enter ==========================
+// ===========================================================
+
 
 // ============================================================
 // == CRUD Create/Update ======================================
@@ -100,33 +133,56 @@ function buscarCliente() {
     // Passo 1: capturar o nome do cliente
     let name = document.getElementById('searchClient').value
     console.log(name) // teste do passo 1
-    api.searchName(name) // Passo 2: envio do nome ao main
-    // recebimento dos dados do cliente
-    api.renderClient((event, dataClient) => {
-        console.log(dataClient) // teste do passo 5
-        // passo 6 renderizar os dados do cliente no formulário
-        // - Criar um vetor global para manipulação dos dados
-        // - criar uma constante para converter os dados recebidos (string) para o formato JASON (JSON.parse)
-        // usar o laço forEach para percorre o vetor e setar os campos (caixas de texto) do formulário
-        const dadosCliente = JSON.parse(dataClient)
-        // atribuir ao vetor os dados do cliente
-        arrayClient = dadosCliente
-        // extrair os dados do cliente
-        arrayClient.forEach((c) => {
-            nameClient.value = c.nomeCliente,
-                cpfClient.value = c.cpfCliente,
-                emailClient.value = c.emailCliente,
-                phoneClient.value = c.foneCliente,
-                cepClient.value = c.cepCliente,
-                addressClient.value = c.logradouroCliente,
-                numberClient.value = c.numeroCliente,
-                complementClient.value = c.complementoCliente,
-                neighborhoodClient.value = c.bairroCliente,
-                cityClient.value = c.cidadeCliente,
-                ufClient.value = c.ufCliente
+
+    // validação de campo obrigatório
+    // se o campo de busca não foi preenchido
+    if (name === "") {
+        // enviar ao main um pedido para alertar o usuário
+        api.validateSearch()
+        foco.focus()
+
+    } else {
+        api.searchName(name) // Passo 2: envio do nome ao main
+        // recebimento dos dados do cliente
+        api.renderClient((event, dataClient) => {
+            console.log(dataClient) // teste do passo 5
+            // passo 6 renderizar os dados do cliente no formulário
+            // - Criar um vetor global para manipulação dos dados
+            // - criar uma constante para converter os dados recebidos (string) para o formato JASON (JSON.parse)
+            // usar o laço forEach para percorre o vetor e setar os campos (caixas de texto) do formulário
+            const dadosCliente = JSON.parse(dataClient)
+            // atribuir ao vetor os dados do cliente
+            arrayClient = dadosCliente
+            // extrair os dados do cliente
+            arrayClient.forEach((c) => {
+                nameClient.value = c.nomeCliente,
+                    cpfClient.value = c.cpfCliente,
+                    emailClient.value = c.emailCliente,
+                    phoneClient.value = c.foneCliente,
+                    cepClient.value = c.cepCliente,
+                    addressClient.value = c.logradouroCliente,
+                    numberClient.value = c.numeroCliente,
+                    complementClient.value = c.complementoCliente,
+                    neighborhoodClient.value = c.bairroCliente,
+                    cityClient.value = c.cidadeCliente,
+                    ufClient.value = c.ufCliente
+            })
         })
-    })
+    }
 }
+
+// setar o cliente não cadastrado (recortar do campo de busca e colar no campo nome)
+api.setClient((args) => {
+    // criar uma variável para armazenar o valor digitado no campo de busca (nome ou cpf)
+    let campoBusca = document.getElementById('searchClient').value
+    // foco no campo de nome do cliente
+    nameClient.focus()
+    // remover o valor digitado no campo de busca
+    foco.value = ""
+    // preencher o campo de nome do cliente com o nome da busca
+    nameClient.value = campoBusca
+    
+})
 
 // == Fim - CRUD Read =========================================
 // ============================================================
