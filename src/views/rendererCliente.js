@@ -37,14 +37,14 @@ let arrayClient = []
 // a constante foco obtem o elemento html (input) identificado como 'searchClient'
 const foco = document.getElementById('searchClient')
 
-
+/*
 function teclaEnter(event) {
     if(event.key === "Enter") {
         event.preventDefault()
         buscarCliente()
     }
 }
-
+*/
 // Iniciar a janela de clientes alterando as propriedades de alguns elementos
 document.addEventListener('DOMContentLoaded', () => {
     // Desativar os botões
@@ -55,6 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
 })
 
 //captura dos dados dos inputs do formulário (Passo 1: Fluxo)
+let id = document.getElementById('idClient')
 let frmClient = document.getElementById('frmClient')
 let nameClient = document.getElementById('inputNameClient')
 let cpfClient = document.getElementById('inputCPFClient')
@@ -71,7 +72,7 @@ let ufClient = document.getElementById('inputUFClient')
 // ==========================================================
 // == Manipulação da tecla Enter ============================
 
-// Função para manipular o evento da tecla Enter
+/* Função para manipular o evento da tecla Enter
 function teclaEnter(event) {
     // se a tecla Enter for pressionada
     if (event.key === "Enter") {
@@ -79,15 +80,15 @@ function teclaEnter(event) {
         // associar o Enter a busca pelo cliente
         buscarCliente()
     }
-}
+}*/
 
-// Função para restaurar o padrão da tecla Enter (submit)
+/* Função para restaurar o padrão da tecla Enter (submit)
 function restaurarEnter() {
     frmClient.removeEventListener('keydown', teclaEnter)
 }
 
 // "Escuta do evento Tecla Enter"
-frmClient.addEventListener('keydown', teclaEnter)
+frmClient.addEventListener('keydown', teclaEnter)*/
 
 // == Fim - manipulação tecla Enter ==========================
 // ===========================================================
@@ -155,6 +156,7 @@ function buscarCliente() {
             arrayClient = dadosCliente
             // extrair os dados do cliente
             arrayClient.forEach((c) => {
+                id.value = c._id,
                 nameClient.value = c.nomeCliente,
                     cpfClient.value = c.cpfCliente,
                     emailClient.value = c.emailCliente,
@@ -166,6 +168,14 @@ function buscarCliente() {
                     neighborhoodClient.value = c.bairroCliente,
                     cityClient.value = c.cidadeCliente,
                     ufClient.value = c.ufCliente
+                    // bloqueio do botão adicionar
+                    btnCreate.disabled = true
+                    // desbloqueio dos botoes editar e excluir
+                    // Desativar o botão
+                    btnUpdate.disabled = false
+                    btnDelete.disabled = false
+                    // captura do id do cliente (usado no delete e update)
+
             })
         })
     }
@@ -201,4 +211,15 @@ api.resetForm((args) => {
 })
 
 // == Fim - reset form ========================================
+// ============================================================
+
+// == CRUD Delete =============================================
+// ============================================================
+
+function excluirCliente() {
+    console.log(id.value) // Passo 1 (receber do form o ID)
+    api.deleteClient(id.value) // PAasso 2 (enviar o ID ao main)
+}
+
+// == Fim - CRUD Delete =======================================
 // ============================================================

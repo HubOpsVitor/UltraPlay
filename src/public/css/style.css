@@ -27,6 +27,12 @@
     cursor: none;
 }
 
+/* ocultar o campo de ID do cliente */
+#idClient {
+    display: none;
+}
+
+
 /* rodapé */
 footer {
     width: 100%;

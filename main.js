@@ -517,3 +517,30 @@ ipcMain.on('search-name', async (event, name) => {
 
 // == Fim - CRUD Read =========================================
 // ============================================================
+
+// == CRUD Delete =============================================
+// ============================================================
+
+ipcMain.on('delete-client', async (event, id) => {
+    console.log(id); // teste de recebimento do i
+    try {
+        // importante - confirmar o exclusão
+        // client é o nome da variável que representa a janela
+        const { response } = await dialog.showMessageBox(client, {
+            type: 'warning',
+            title: "Atenção!",
+            message: "Tem certeza que deseja excluir? Está ação não poderá ser revertida.",
+            buttons: ['Cancelar', 'Excluir'] //[0, 1]
+        })
+        if (response === 1) {
+            // Passo 3 - Excluir o registro do cliente
+            const delClient = await clientModel.findByIdAndDelete(id)
+            event.reply('reset-form')
+        }
+    } catch (error) {
+        console.log(error)
+    }
+})
+
+// == Fim - CRUD Delete =======================================
+// ============================================================
