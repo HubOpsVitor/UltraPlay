@@ -241,7 +241,8 @@ ipcMain.on('os-window', () => {
 })
 
 // ============================================================
-// == Clientes - CRUD Create
+// == Clientes - CRUD Create ==================================
+
 // recebimento do objeto que contem os dados do cliente
 ipcMain.on('new-client', async (event, client) => {
     // Importante! Teste de recebimento dos dados do cliente
@@ -466,7 +467,7 @@ async function relatorioClientes() {
 
 
 // =========================== Validação de busca (preenchimento obrigatório)
-ipcMain.on('validate-search', ()=> {
+ipcMain.on('validate-search', () => {
     dialog.showMessageBox({
         type: 'warning',
         title: "Atenção!",
@@ -494,12 +495,12 @@ ipcMain.on('search-name', async (event, name) => {
                 message: "Cliente não cadastrado. \nDeseja Cadastrar esse cliente?",
                 defaultId: 0, // botão 0
                 buttons: ['Sim', 'Não']
-            }).then((result)=> {
+            }).then((result) => {
                 if (result.response === 0) {
                     // Enviar ao renderizador um pedido de busca para setar os campos (recortar do campo de busca e colar nos campos de nome)
                     event.reply('set-client')
                 } else {
-                event.reply('reset-form')
+                    event.reply('reset-form')
                 }
             })
         }
@@ -543,4 +544,52 @@ ipcMain.on('delete-client', async (event, id) => {
 })
 
 // == Fim - CRUD Delete =======================================
+// ============================================================
+
+// == CRUD Update =============================================
+// ============================================================
+ipcMain.on('update-client', async (event, client) => {
+    console.log(client) // Teste importante (recebimento dos dados do cliente)
+    try {
+        // criar uma nova de estrutura de dados usando a classe modelo. Atenção! Os atributos precisam ser idênticos ao modelo de dados Clientes.js e os valores são definidos pelo conteúdo do objeto cliente
+        const updateClient = await clientModel.findByIdAndUpdate(
+            client.idCli,
+            {
+                nomeCliente: client.nameCli,
+                cpfCliente: client.cpfCli,
+                emailCliente: client.emailCli,
+                foneCliente: client.foneCli,
+                cepCliente: client.cepCli,
+                logradouroCliente: client.addressCli,
+                numeroCliente: client.numberCli,
+                complementoCliente: client.complementCli,
+                bairroCliente: client.neighborhoodCli,
+                cidadeCliente: client.cityCli,
+                ufCliente: client.ufCli
+            },
+            {
+                new: true
+            }
+        )
+        // Mensagem de confirmação
+        dialog.showMessageBox({
+            //customização
+            type: 'info',
+            title: "Aviso",
+            message: "Dados do cliente alterados com sucesso",
+            buttons: ['OK']
+        }).then((result) => {
+            //ação ao pressionar o botão (result = 0)
+            if (result.response === 0) {
+                //enviar um pedido para o renderizador limpar os campos e resetar as configurações pré definidas (rótulo 'reset-form' do preload.js
+                event.reply('reset-form')
+            }
+        })
+    } catch (error) {
+        console.log(error)
+    }
+})
+
+
+// == Fim - CRUD Update =======================================
 // ============================================================
