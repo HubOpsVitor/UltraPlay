@@ -475,19 +475,23 @@ ipcMain.on('validate-search', () => {
         buttons: ['OK']
     })
 })
-ipcMain.on('search-name', async (event, name) => {
-    //console.log("teste IPC search-name")
-    //console.log(name) // teste do passo 2 (importante!)
-    // Passos 3 e 4 busca dos dados do cliente no banco
-    //find({nomeCliente: name}) - busca pelo nome
-    //RegExp(name, 'i') - i (insensitive / Ignorar maiúsculo ou minúsculo)
-    try {
-        const dataClient = await clientModel.find({
-            nomeCliente: new RegExp(name, 'i')
-        })
-        console.log(dataClient) // teste passos 3 e 4 (importante!)
 
-        // se o vetor estiver vazio [] (cliente não cadastrado)
+
+ipcMain.on('search-name', async (event, name) => {
+    console.log("teste IPC search-name")
+
+    //Passo 3 e 4: Busca dos dados do cliente no banco
+
+    //find({nomeCliente: name}) - busca pelo nome
+    //RegExp(name, i) - i (insensitive / Ignorar maiúsculo ou minúsculo)
+    try {
+        const dataClient  = await clientModel.find({
+            $or: [
+              { nomeClient: new RegExp(name, 'i') },
+              { cpfCliente: new RegExp(name, 'i') }
+            ]
+          })
+        console.log(dataClient)//Teste do pásso 3 e 4
         if (dataClient.length === 0) {
             dialog.showMessageBox({
                 type: 'question',
@@ -504,17 +508,15 @@ ipcMain.on('search-name', async (event, name) => {
                 }
             })
         }
-
-
-        // Passo 5:
-        // enviando os dados do cliente ao rendererCliente
-        // OBS: IPC só trabalha com string, então é necessário converter o JSON para string JSON.stringify(dataClient)
+        //Passo 5: 
+        //Enviando os dados do cliente ao rendererCliente
+        //OBS: ipc só trabalha com string, então é necessario converter o JSON para JSON.stringify(dataClient)
         event.reply('render-client', JSON.stringify(dataClient))
-
     } catch (error) {
         console.log(error)
     }
 })
+
 
 // == Fim - CRUD Read =========================================
 // ============================================================
@@ -542,6 +544,7 @@ ipcMain.on('delete-client', async (event, id) => {
         console.log(error)
     }
 })
+
 
 // == Fim - CRUD Delete =======================================
 // ============================================================
