@@ -80,9 +80,9 @@ function clientWindow() {
     if (main) {
         client = new BrowserWindow({
             width: 1010,
-            height: 680,
-            //autoHideMenuBar: true,
-            //resizable: false,
+            height: 600,
+            autoHideMenuBar: true,
+            resizable: false,
             parent: main,
             modal: true,
             //ativação do preload.js
@@ -103,8 +103,8 @@ function osWindow() {
     if (main) {
         os = new BrowserWindow({
             width: 1010,
-            height: 720,
-            // autoHideMenuBar: true,
+            height: 805,
+            autoHideMenuBar: true,
             resizable: false,
             parent: main,
             modal: true,
@@ -402,6 +402,7 @@ async function relatorioClientes() {
         console.log(error);
     }
 }
+
 // == Fim - relatório de clientes =============================
 // ============================================================
 
@@ -409,7 +410,7 @@ async function relatorioClientes() {
 // ============================================================
 // == CRUD Read ===============================================
 
-// =========================== Validação de busca (preenchimento obrigatório)
+// Validação de busca (preenchimento obrigatório)
 ipcMain.on('validate-search', () => {
     dialog.showMessageBox({
         type: 'warning',
@@ -419,58 +420,48 @@ ipcMain.on('validate-search', () => {
     })
 })
 
-
 ipcMain.on('search-name', async (event, name) => {
-    console.log('Iniciando busca por:', name);
-  
-    if (!name) {
-      dialog.showMessageBox({
-        type: 'warning',
-        title: 'Atenção!',
-        message: 'Por favor, forneça um nome ou CPF para a busca.',
-        buttons: ['OK'],
-      });
-      return;
-    }
-  
+    //console.log("teste IPC search-name")
+    //console.log(name) // teste do passo 2 (importante!)
+    // Passos 3 e 4 busca dos dados do cliente no banco
+    //find({nomeCliente: name}) - busca pelo nome
+    //RegExp(name, 'i') - i (insensitive / Ignorar maiúsculo ou minúsculo)
     try {
-      const dataClient = await clientModel.find({
-        $or: [
-          { nomeCliente: new RegExp(name, 'i') },
-          { cpfCliente: new RegExp(name, 'i') },
-        ],
-      });
-  
-      console.log('Dados encontrados:', dataClient);
-  
-      if (dataClient.length === 0) {
-        dialog.showMessageBox({
-          type: 'warning',
-          title: 'Aviso',
-          message: 'Cliente não cadastrado, deseja cadastrar?',
-          defaultId: 0,
-          buttons: ['Sim', 'Não'],
-        }).then((result) => {
-          if (result.response === 0) {
-            event.reply('set-client');
-          } else {
-            event.reply('reset-form');
-          }
-        });
-      } else {
-        event.reply('render-client', JSON.stringify(dataClient));
-      }
-    } catch (error) {
-      console.error('Erro ao buscar dados do cliente:', error);
-      dialog.showMessageBox({
-        type: 'error',
-        title: 'Erro',
-        message: 'Ocorreu um erro ao buscar os dados do cliente.',
-        buttons: ['OK'],
-      });
-    }
-  });
+        const dataClient = await clientModel.find({
+            nomeCliente: new RegExp(name, 'i')
+        })
+        console.log(dataClient) // teste passos 3 e 4 (importante!)
 
+        // melhoria da experiência do usuário (se o cliente não estiver cadastrado, alertar o usuário e questionar se ele quer cadastrar este novo cliente. Se não quiser cadastrar, limpar os campos, se quiser cadastrar recortar o nome do cliente do campo de busca e colar no campo nome)
+
+        // se o vetor estiver vazio [] (cliente não cadastrado)
+        if (dataClient.length === 0) {
+            dialog.showMessageBox({
+                type: 'warning',
+                title: "Aviso",
+                message: "Cliente não cadastrado.\nDeseja cadastrar este cliente?",
+                defaultId: 0, //botão 0
+                buttons: ['Sim', 'Não'] // [0, 1]
+            }).then((result) => {
+                if (result.response === 0) {
+                    // enviar ao renderizador um pedido para setar os campos (recortar do campo de busca e colar no campo nome)
+                    event.reply('set-client')
+                } else {
+                    // limpar o formulário
+                    event.reply('reset-form')
+                }
+            })
+        }
+
+        // Passo 5:
+        // enviando os dados do cliente ao rendererCliente
+        // OBS: IPC só trabalha com string, então é necessário converter o JSON para string JSON.stringify(dataClient)
+        event.reply('render-client', JSON.stringify(dataClient))
+
+    } catch (error) {
+        console.log(error)
+    }
+})
 
 // == Fim - CRUD Read =========================================
 // ============================================================
@@ -608,6 +599,7 @@ ipcMain.on('new-os', async (event, os) => {
             computador: os.computer_OS,
             serie: os.serial_OS,
             problema: os.problem_OS,
+            observacao: os.obs_OS,
             tecnico: os.specialist_OS,
             diagnostico: os.diagnosis_OS,
             pecas: os.parts_OS,

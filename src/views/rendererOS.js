@@ -73,6 +73,7 @@ let statusOS = document.getElementById('inputStatus')
 let computer = document.getElementById('inputComputer')
 let serial = document.getElementById('inputSerial')
 let problem = document.getElementById('inputProblem')
+let obs = document.getElementById('inputObs')
 let specialist = document.getElementById('inputSpecialist')
 let diagnosis = document.getElementById('inputDiagnosis')
 let parts = document.getElementById('inputParts')
@@ -94,8 +95,8 @@ frmOS.addEventListener('submit', async (event) => {
         api.validateClient()
     } else {
         // Teste importante (recebimento dos dados do formuláro - passo 1 do fluxo)
-        console.log(os.value, idClient.value, statusOS.value, computer.value, serial.value, problem.value, specialist.value, diagnosis.value, parts.value, total.value)
-        if (os.value === "") {
+        console.log(idOS.value, idClient.value, statusOS.value, computer.value, serial.value, problem.value, obs.value, specialist.value, diagnosis.value, parts.value, total.value)
+        if (idOS.value === "") {
             //Gerar OS
             //Criar um objeto para armazenar os dados da OS antes de enviar ao main
             const os = {
@@ -104,6 +105,7 @@ frmOS.addEventListener('submit', async (event) => {
                 computer_OS: computer.value,
                 serial_OS: serial.value,
                 problem_OS: problem.value,
+                obs_OS: obs.value,
                 specialist_OS: specialist.value,
                 diagnosis_OS: diagnosis.value,
                 parts_OS: parts.value,
@@ -147,10 +149,11 @@ api.renderOS((event, dataOS) => {
     })
     dateOS.value = formatada
     idClient.value = os.idCliente
-    statusOS.value = os.status
+    statusOS.value = os.statusOS
     computer.value = os.computador
     serial.value = os.serie
     problem.value = os.problema
+    obs.value = os.observacao
     specialist.value = os.tecnico
     diagnosis.value = os.diagnostico
     parts.value = os.pecas

@@ -15,7 +15,7 @@
 
 <body>
     <div class="container">
-        <form class="mt-2 row g-3" id="frmOS">
+        <form class="mt-1 row g-3" id="frmOS">
 
             <!-- OS -->
             <div class="col-md-4">
@@ -27,6 +27,11 @@
             <div class="col-md-3">
                 <label class="form-label">Data de entrada</label>
                 <input type="text" class="form-control" id="inputData" disabled>
+            </div>
+
+            <!-- Buscar cliente -->
+            <div class="col-md-5">
+
             </div>
 
             <!-- Buscar cliente -->
@@ -57,16 +62,17 @@
             <!-- Telefone -->
             <div class="col-md-2">
                 <label for="inputPhoneClient" class="form-label">Telefone</label>
-                <input type="text" class="form-control" id="inputPhoneClient" spellcheck="false" maxlength="15" disabled>
-            </div>            
+                <input type="text" class="form-control" id="inputPhoneClient" spellcheck="false" maxlength="15"
+                    disabled>
+            </div>
 
-            <input type="text" id="idClient" hidden> <!-- oculto -->
+            <input type="text" id="idClient"> <!-- oculto -->
 
             <!-- Linha -->
             <hr class="mt-4 border border-secondary border -1">
 
             <!-- Status -->
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <label class="form-label">Status da OS</label>
                 <select class="form-select" id="inputStatus" required>
                     <option value="">Selecione</option>
@@ -78,20 +84,20 @@
                 </select>
             </div>
 
-            <!-- Console -->
-            <div class="col-md-8">
-                <label class="form-label" for="inputEquipamento">Console</label>
-                <select class="form-select" id="inputEquipamento" required>
-                    <option value="">Selecione</option>
-                    <option>Playstation 4</option>
-                    <option>Playstation 5</option>
-                    <option>Xbox Series X</option>
-                    <option>Xbox Series S</option>
-                    <option>Nintendo Switch</option>
-                    <option>Nintendo Switch 2</option>
-                    <option>Outros</option>
-                </select>
-            </div>
+           <!-- Console -->
+           <div class="col-md-8">
+            <label class="form-label" for="inputComputer">Console</label>
+            <select class="form-select" id="inputComputer" required>
+                <option value="">Selecione</option>
+                <option>Playstation 4</option>
+                <option>Playstation 5</option>
+                <option>Xbox Series X</option>
+                <option>Xbox Series S</option>
+                <option>Nintendo Switch</option>
+                <option>Nintendo Switch 2</option>
+                <option>Outros</option>
+            </select>
+        </div>
 
             <!-- Número de série -->
             <div class="col-md-3">
@@ -99,13 +105,19 @@
                 <input type="text" class="form-control" id="inputSerial" maxlength="20">
             </div>
 
-            <!-- Problema relatado -->
-            <div class="col-md-9">
+            <!-- Problema relatado pelo cliente -->
+            <div class="col-md-7">
                 <label class="form-label" for="inputProblem">Problema relatado</label>
-                <input type="text" class="form-control" id="inputProblem" maxlength="80" required>
+                <input type="text" class="form-control" id="inputProblem" maxlength="54" required>
             </div>
 
-            <!-- Técnico especialista -->
+            <!-- Observações -->
+            <div class="col-md-5">
+                <label class="form-label" for="inputObs">Observações</label>
+                <input type="text" class="form-control" id="inputObs" maxlength="35">
+            </div>
+
+            <!-- Tecnico especialista -->
             <div class="col-md-3">
                 <label class="form-label" for="inputSpecialist">Técnico</label>
                 <input type="text" class="form-control" id="inputSpecialist" maxlength="20">
@@ -126,18 +138,16 @@
             <!-- Valor do serviço -->
             <div class="col-md-3">
                 <label class="form-label" for="inputTotal">Valor</label>
-                <input type="text" class="form-control" id="inputTotal" maxlength="20">
+                <input type="number" class="form-control" id="inputTotal" step="0.01" min="0">
             </div>
 
-            <div class="mt-4 d-flex justify-content-center gap-1">
+            <div class="mt-5 d-flex justify-content-center gap-1">
                 <button type="submit" class="btn btn-success">Gerar OS</button>
-                <button type="button" class="btn btn-primary" onclick="findOS()">Buscar OS</button>
                 <button type="submit" class="btn btn-warning">Editar OS</button>
                 <button type="button" class="btn btn-danger">Excluir OS</button>
-                <button type="button" class="btn btn-secondary">Imprimir OS</button>
                 <button type="reset" class="btn" id="btnReset" onclick="resetForm()"></button>
-            </div>
-
+                <button type="button" class="btn btn-primary" onclick="findOS()" id="btnBuscaOS">Buscar OS</button>
+                <button type="button" class="btn btn-secondary">Imprimir OS</button>                
         </form>
     </div>
 
@@ -145,6 +155,7 @@
     <script src="../public/js/bootstrap.min.js"></script>
 
     <script src="rendererOS.js"></script>
+
 </body>
 
 </html>
