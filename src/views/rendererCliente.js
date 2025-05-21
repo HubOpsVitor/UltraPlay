@@ -200,18 +200,7 @@ function buscarCliente() {
     }
 }
 
-// setar o cliente não cadastrado (recortar do campo de busca e colar no campo nome)
-api.setClient((args) => {
-    // criar uma variável para armazenar o valor digitado no campo de busca (nome ou cpf)
-    let campoBusca = document.getElementById('searchClient').value
-    // foco no campo de nome do cliente
-    nameClient.focus()
-    // remover o valor digitado no campo de busca
-    foco.value = ""
-    // preencher o campo de nome do cliente com o nome da busca
-    nameClient.value = campoBusca
 
-})
 
 // == Fim - CRUD Read =========================================
 // ============================================================
@@ -243,3 +232,20 @@ api.resetForm((args) => {
 
 // == Fim - reset form ========================================
 // ============================================================
+// setar o cliente não cadastrado (recortar do campo de busca e colar no campo nome)
+api.setClient((args) => {
+    let campoBusca = document.getElementById('searchClient').value.trim()
+
+// Verifica se é CPF (somente números ou com máscara)
+if (/^\d{11}$/.test(campoBusca) || /^\d{3}\.\d{3}\.\d{3}-\d{2}$/.test(campoBusca)) {
+    foco.value = "";
+    cpfClient.focus();
+    cpfClient.value = campoBusca;
+}
+// Senão, assume como nome
+else {
+    foco.value = "";
+    nameClient.focus();
+    nameClient.value = campoBusca;
+}
+})
