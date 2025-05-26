@@ -151,7 +151,7 @@ api.renderOS((event, dataOS) => {
     idClient.value = os.idCliente
     statusOS.value = os.statusOS
     computer.value = os.computador
-    serial.value = os.serie
+    serial.value = os.numeroSerie
     problem.value = os.problema
     obs.value = os.observacao
     specialist.value = os.tecnico
@@ -180,4 +180,12 @@ api.resetForm((args) => {
 // == Fim - reset form ========================================
 // ============================================================
 
+// === Imprimir OS ==============================================
+// ==============================================================
 
+function generateOS(){
+    api.printOS()
+}
+
+// === Fim - Imprimir OS ==============================================
+// ==============================================================

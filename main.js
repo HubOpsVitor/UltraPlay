@@ -606,7 +606,7 @@ ipcMain.on('new-os', async (event, os) => {
             idCliente: os.idClient_OS,
             statusOS: os.stat_OS,
             computador: os.computer_OS,
-            serie: os.serial_OS,
+            numeroSerie: os.serial_OS,
             problema: os.problem_OS,
             observacao: os.obs_OS,
             tecnico: os.specialist_OS,
@@ -659,7 +659,7 @@ ipcMain.on('search-os', async (event) => {
             if (mongoose.Types.ObjectId.isValid(result)) {
                 try {
                     const dataOS = await osModel.findById(result)
-                    if (dataOS) {
+                    if (dataOS && dataOS !== null) {
                         console.log(dataOS) // teste importante
                         // enviando os dados da OS ao rendererOS
                         // OBS: IPC só trabalha com string, então é necessário converter o JSON para string JSON.stringify(dataOS)
@@ -679,7 +679,7 @@ ipcMain.on('search-os', async (event) => {
                 dialog.showMessageBox({
                     type: 'error',
                     title: "Atenção!",
-                    message: "Formato do número da OS inválido.\nVerifique e tente novamente.",
+                    message: "Código da OS inválido.\nVerifique e tente novamente.",
                     buttons: ['OK']
                 })
             }
@@ -687,5 +687,109 @@ ipcMain.on('search-os', async (event) => {
     })
 })
 
+
 // == Fim - Buscar OS - CRUD Read =============================
+// ============================================================
+
+
+
+
+
+
+
+
+
+
+
+// == Imprimir OS =============================================
+// ============================================================
+
+ipcMain.on('print-os', async (event) => {
+    prompt({
+        title: 'Imprimir OS',
+        label: 'Digite o número da OS:',
+        inputAttrs: {
+            type: 'text'
+        },
+        type: 'input',
+        width: 400,
+        height: 200
+    }).then(async (result) => {
+        // buscar OS pelo id (verificar formato usando o mongoose - importar no início do main)
+        if (result !== null) {
+            // Verificar se o ID é válido (uso do mongoose - não esquecer de importar)
+            if (mongoose.Types.ObjectId.isValid(result)) {
+                try {
+                    // teste do botão imprimir
+                    //console.log("imprimir OS")
+                    const dataOS = await osModel.findById(result)
+                    if (dataOS && dataOS !== null) {
+                        console.log(dataOS) // teste importante
+                        // extrair os dados do cliente de acordo com o idCliente vinculado a OS
+                        const dataClient = await clientModel.find({
+                            _id: dataOS.idCliente
+                        })
+                        console.log(dataClient)
+                        // impressão (documento PDF) com os dados da OS, do cliente e termos do serviço (uso do jspdf)
+
+                        // formatação do documento pdf
+                        const doc = new jsPDF('p', 'mm', 'a4')
+                        const imagePath = path.join(__dirname, 'src', 'public', 'img', 'logo.png')
+                        const imageBase64 = fs.readFileSync(imagePath, { encoding: 'base64' })
+                        doc.addImage(imageBase64, 'PNG', 5, 8)
+                        doc.setFontSize(18)
+                        doc.text("OS:", 14, 45) //x=14, y=45
+                        
+                        // Extração dos dados da OS e do cliente vinculado
+
+                        // Texto do termo de serviço
+                        doc.setFontSize(10)
+                        const termo = `
+Termo de Serviço e Garantia
+
+O cliente autoriza a realização dos serviços técnicos descritos nesta ordem, ciente de que:
+
+- Diagnóstico e orçamento são gratuitos apenas se o serviço for aprovado. Caso contrário, poderá ser cobrada taxa de análise.
+- Peças substituídas poderão ser retidas para descarte ou devolvidas mediante solicitação no ato do serviço.
+- A garantia dos serviços prestados é de 90 dias, conforme Art. 26 do Código de Defesa do Consumidor, e cobre exclusivamente o reparo executado ou peça trocada, desde que o equipamento não tenha sido violado por terceiros.
+- Não nos responsabilizamos por dados armazenados. Recomenda-se o backup prévio.
+- Equipamentos não retirados em até 90 dias após a conclusão estarão sujeitos a cobrança de armazenagem ou descarte, conforme Art. 1.275 do Código Civil.
+- O cliente declara estar ciente e de acordo com os termos acima.`
+
+                        // Inserir o termo no PDF
+                        doc.text(termo, 14, 60, { maxWidth: 180 }) // x=14, y=60, largura máxima para quebrar o texto automaticamente
+
+                        // Definir o caminho do arquivo temporário e nome do arquivo
+                        const tempDir = app.getPath('temp')
+                        const filePath = path.join(tempDir, 'os.pdf')
+                        // salvar temporariamente o arquivo
+                        doc.save(filePath)
+                        // abrir o arquivo no aplicativo padrão de leitura de pdf do computador do usuário
+                        shell.openPath(filePath)
+                    } else {
+                        dialog.showMessageBox({
+                            type: 'warning',
+                            title: "Aviso!",
+                            message: "OS não encontrada",
+                            buttons: ['OK']
+                        })
+                    }
+
+
+                } catch (error) {
+                    console.log(error)
+                }
+            } else {
+                dialog.showMessageBox({
+                    type: 'error',
+                    title: "Atenção!",
+                    message: "Código da OS inválido.\nVerifique e tente novamente.",
+                    buttons: ['OK']
+                })
+            }
+        }
+    })
+})
+
+// == Fim - Imprimir OS ======================================
 // ============================================================

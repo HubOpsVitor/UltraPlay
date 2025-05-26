@@ -21,7 +21,7 @@ const osSchema = new Schema({
     computador: {
         type: String
     },
-    serie: {
+    numeroSerie: {
         type: String        
     },
     problema: {

@@ -108,13 +108,13 @@
             <!-- Problema relatado pelo cliente -->
             <div class="col-md-7">
                 <label class="form-label" for="inputProblem">Problema relatado</label>
-                <input type="text" class="form-control" id="inputProblem" maxlength="54" required>
+                <input type="text" class="form-control" id="inputProblem" maxlength="80" required>
             </div>
 
             <!-- Observações -->
             <div class="col-md-5">
                 <label class="form-label" for="inputObs">Observações</label>
-                <input type="text" class="form-control" id="inputObs" maxlength="35">
+                <input type="text" class="form-control" id="inputObs" maxlength="50">
             </div>
 
             <!-- Tecnico especialista -->
@@ -126,7 +126,7 @@
             <!-- Diagnóstico técnico -->
             <div class="col-md-9">
                 <label class="form-label" for="inputDiagnosis">Diagnóstico técnico</label>
-                <input type="text" class="form-control" id="inputDiagnosis" maxlength="60">
+                <input type="text" class="form-control" id="inputDiagnosis" maxlength="80">
             </div>
 
             <!-- Peças -->
@@ -147,7 +147,7 @@
                 <button type="button" class="btn btn-danger">Excluir OS</button>
                 <button type="reset" class="btn" id="btnReset" onclick="resetForm()"></button>
                 <button type="button" class="btn btn-primary" onclick="findOS()" id="btnBuscaOS">Buscar OS</button>
-                <button type="button" class="btn btn-secondary">Imprimir OS</button>                
+                <button type="button" class="btn btn-secondary" onclick="generateOS()">Imprimir OS</button>                
         </form>
     </div>
 

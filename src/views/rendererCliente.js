@@ -157,13 +157,10 @@ function buscarCliente() {
     let name = document.getElementById('searchClient').value
     console.log(name) // teste do passo 1
 
-    // validação de campo obrigatório
-    // se o campo de busca não foi preenchido
+    //Validação de campo obrigatorio. Se o campo de busca não for preenchido enviar um alerta ao usuario. Fazer o main enviar um pedido para alertar o usuário
     if (name === "") {
-        // enviar ao main um pedido para alertar o usuário
         api.validateSearch()
         foco.focus()
-
     } else {
         api.searchName(name) // Passo 2: envio do nome ao main
         // recebimento dos dados do cliente
@@ -179,7 +176,7 @@ function buscarCliente() {
             // extrair os dados do cliente
             arrayClient.forEach((c) => {
                 id.value = c._id,
-                    nameClient.value = c.nomeCliente,
+                nameClient.value = c.nomeCliente,
                     cpfClient.value = c.cpfCliente,
                     emailClient.value = c.emailCliente,
                     phoneClient.value = c.foneCliente,
@@ -190,18 +187,17 @@ function buscarCliente() {
                     neighborhoodClient.value = c.bairroCliente,
                     cityClient.value = c.cidadeCliente,
                     ufClient.value = c.ufCliente
-                // desativar o botão adicionar
-                btnCreate.disabled = true
-                // ativar os botões editar e excluir
-                btnUpdate.disabled = false
-                btnDelete.disabled = false
+                     // bloqueio do botão adicinar
+                     btnCreate.disabled = true
+                     // Desbloqueio dos botão ediar e excluir
+                     btnUpdate.disabled = false
+                     btnDelete.disabled = false
             })
         })
     }
+
+
 }
-
-
-
 // == Fim - CRUD Read =========================================
 // ============================================================
 
