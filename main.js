@@ -423,54 +423,54 @@ ipcMain.on('validate-search', () => {
 
 ipcMain.on('search-name', async (event, name) => {
     console.log('Iniciando busca por:', name);
-  
+
     if (!name) {
-      dialog.showMessageBox({
-        type: 'warning',
-        title: 'Atenção!',
-        message: 'Por favor, forneça um nome ou CPF para a busca.',
-        buttons: ['OK'],
-      });
-      return;
-    }
-  
-    try {
-      const dataClient = await clientModel.find({
-        $or: [
-          { nomeCliente: new RegExp(name, 'i') },
-          { cpfCliente: new RegExp(name, 'i') },
-        ],
-      });
-  
-      console.log('Dados encontrados:', dataClient);
-  
-      if (dataClient.length === 0) {
         dialog.showMessageBox({
-          type: 'warning',
-          title: 'Aviso',
-          message: 'Cliente não cadastrado, deseja cadastrar?',
-          defaultId: 0,
-          buttons: ['Sim', 'Não'],
-        }).then((result) => {
-          if (result.response === 0) {
-            event.reply('set-client');
-          } else {
-            event.reply('reset-form');
-          }
+            type: 'warning',
+            title: 'Atenção!',
+            message: 'Por favor, forneça um nome ou CPF para a busca.',
+            buttons: ['OK'],
         });
-      } else {
-        event.reply('render-client', JSON.stringify(dataClient));
-      }
-    } catch (error) {
-      console.error('Erro ao buscar dados do cliente:', error);
-      dialog.showMessageBox({
-        type: 'error',
-        title: 'Erro',
-        message: 'Ocorreu um erro ao buscar os dados do cliente.',
-        buttons: ['OK'],
-      });
+        return;
     }
-  });
+
+    try {
+        const dataClient = await clientModel.find({
+            $or: [
+                { nomeCliente: new RegExp(name, 'i') },
+                { cpfCliente: new RegExp(name, 'i') },
+            ],
+        });
+
+        console.log('Dados encontrados:', dataClient);
+
+        if (dataClient.length === 0) {
+            dialog.showMessageBox({
+                type: 'warning',
+                title: 'Aviso',
+                message: 'Cliente não cadastrado, deseja cadastrar?',
+                defaultId: 0,
+                buttons: ['Sim', 'Não'],
+            }).then((result) => {
+                if (result.response === 0) {
+                    event.reply('set-client');
+                } else {
+                    event.reply('reset-form');
+                }
+            });
+        } else {
+            event.reply('render-client', JSON.stringify(dataClient));
+        }
+    } catch (error) {
+        console.error('Erro ao buscar dados do cliente:', error);
+        dialog.showMessageBox({
+            type: 'error',
+            title: 'Erro',
+            message: 'Ocorreu um erro ao buscar os dados do cliente.',
+            buttons: ['OK'],
+        });
+    }
+});
 
 // == Fim - CRUD Read =========================================
 // ============================================================
@@ -691,18 +691,8 @@ ipcMain.on('search-os', async (event) => {
 // == Fim - Buscar OS - CRUD Read =============================
 // ============================================================
 
-
-
-
-
-
-
-
-
-
-
-// == Imprimir OS =============================================
 // ============================================================
+// Impressão de OS ============================================
 
 ipcMain.on('print-os', async (event) => {
     prompt({
@@ -715,40 +705,46 @@ ipcMain.on('print-os', async (event) => {
         width: 400,
         height: 200
     }).then(async (result) => {
-        // buscar OS pelo id (verificar formato usando o mongoose - importar no início do main)
         if (result !== null) {
-            // Verificar se o ID é válido (uso do mongoose - não esquecer de importar)
             if (mongoose.Types.ObjectId.isValid(result)) {
                 try {
-                    // teste do botão imprimir
-                    //console.log("imprimir OS")
                     const dataOS = await osModel.findById(result)
                     if (dataOS && dataOS !== null) {
-                        console.log(dataOS) // teste importante
-                        // extrair os dados do cliente de acordo com o idCliente vinculado a OS
                         const dataClient = await clientModel.find({
                             _id: dataOS.idCliente
                         })
-                        console.log(dataClient)
-                        // impressão (documento PDF) com os dados da OS, do cliente e termos do serviço (uso do jspdf)
 
-                        // formatação do documento pdf
                         const doc = new jsPDF('p', 'mm', 'a4')
                         const imagePath = path.join(__dirname, 'src', 'public', 'img', 'logo.png')
                         const imageBase64 = fs.readFileSync(imagePath, { encoding: 'base64' })
                         doc.addImage(imageBase64, 'PNG', 5, 8)
-                        doc.setFontSize(18)
-                        doc.text("OS:", 14, 45) //x=14, y=45
-                        
-                        // Extração dos dados da OS e do cliente vinculado
 
-                        // Texto do termo de serviço
+
+                        doc.setFontSize(14)
+                        doc.text("OS:", 14, 45)
+
+                        doc.setLineWidth(0.1)
+                        doc.line(10, 50, 200, 50)
+
+                        doc.setFontSize(12)
+                        dataClient.forEach((c) => {
+                            doc.text("Cliente:", 14, 60)
+                            doc.text(c.nomeCliente, 40, 60)
+                            doc.text(c.foneCliente, 100, 60)
+                            doc.text(c.emailCliente || "N/A", 150, 60)
+                        })
+
+                        doc.setFontSize(12)
+                        doc.text(String(dataOS.computador), 14, 70)
+                        doc.text(String(dataOS.problema), 100, 70)
+
+                        doc.line(10, 75, 200, 75)
+
                         doc.setFontSize(10)
                         const termo = `
 Termo de Serviço e Garantia
 
 O cliente autoriza a realização dos serviços técnicos descritos nesta ordem, ciente de que:
-
 - Diagnóstico e orçamento são gratuitos apenas se o serviço for aprovado. Caso contrário, poderá ser cobrada taxa de análise.
 - Peças substituídas poderão ser retidas para descarte ou devolvidas mediante solicitação no ato do serviço.
 - A garantia dos serviços prestados é de 90 dias, conforme Art. 26 do Código de Defesa do Consumidor, e cobre exclusivamente o reparo executado ou peça trocada, desde que o equipamento não tenha sido violado por terceiros.
@@ -756,15 +752,11 @@ O cliente autoriza a realização dos serviços técnicos descritos nesta ordem,
 - Equipamentos não retirados em até 90 dias após a conclusão estarão sujeitos a cobrança de armazenagem ou descarte, conforme Art. 1.275 do Código Civil.
 - O cliente declara estar ciente e de acordo com os termos acima.`
 
-                        // Inserir o termo no PDF
-                        doc.text(termo, 14, 60, { maxWidth: 180 }) // x=14, y=60, largura máxima para quebrar o texto automaticamente
+                        doc.text(termo, 14, 85, { maxWidth: 180 })
 
-                        // Definir o caminho do arquivo temporário e nome do arquivo
                         const tempDir = app.getPath('temp')
                         const filePath = path.join(tempDir, 'os.pdf')
-                        // salvar temporariamente o arquivo
                         doc.save(filePath)
-                        // abrir o arquivo no aplicativo padrão de leitura de pdf do computador do usuário
                         shell.openPath(filePath)
                     } else {
                         dialog.showMessageBox({
@@ -774,8 +766,6 @@ O cliente autoriza a realização dos serviços técnicos descritos nesta ordem,
                             buttons: ['OK']
                         })
                     }
-
-
                 } catch (error) {
                     console.log(error)
                 }
@@ -791,5 +781,5 @@ O cliente autoriza a realização dos serviços técnicos descritos nesta ordem,
     })
 })
 
-// == Fim - Imprimir OS ======================================
+// Fim - Impressão de OS ======================================
 // ============================================================

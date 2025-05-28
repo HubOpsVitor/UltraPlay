@@ -158,11 +158,90 @@ api.renderOS((event, dataOS) => {
     diagnosis.value = os.diagnostico
     parts.value = os.pecas
     total.value = os.valor
+
+// Desativar o botão adicionar
+btnCreate.disabled = true
+// Ativar os botões editar e excluir
+btnUpdate.disabled = false
+btnDelete.disabled = false
+// Desativar o campo de busca do cliente (para evitar uma inconsistência de dados)
+inputSearchClient.disabled = true
+
 })
+
+
 
 // == Fim - Buscar OS - CRUD Read =============================
 // ============================================================
 
+// ============================================================
+// == CRUD Create/Update ======================================
+
+//Evento associado ao botão submit (uso das validações do html)
+frmOS.addEventListener('submit', async (event) => {
+    //evitar o comportamento padrão do submit que é enviar os dados do formulário e reiniciar o documento html
+    event.preventDefault()
+    // validação do campo obrigatório 'idClient' (validação html não funciona via html para campos desativados)
+    if (idClient.value === "") {
+        api.validateClient()
+    } else {
+        // Teste importante (recebimento dos dados do formuláro - passo 1 do fluxo)
+        console.log(idOS.value, idClient.value, statusOS.value, computer.value, serial.value, problem.value, obs.value, specialist.value, diagnosis.value, parts.value, total.value)
+        if (idOS.value === "") {
+            //Gerar OS
+            //Criar um objeto para armazenar os dados da OS antes de enviar ao main
+            const os = {
+                idClient_OS: idClient.value,
+                stat_OS: statusOS.value,
+                computer_OS: computer.value,
+                serial_OS: serial.value,
+                problem_OS: problem.value,
+                obs_OS: obs.value,
+                specialist_OS: specialist.value,
+                diagnosis_OS: diagnosis.value,
+                parts_OS: parts.value,
+                total_OS: total.value
+            }
+            // Enviar ao main o objeto os - (Passo 2: fluxo)
+            // uso do preload.js
+            api.newOS(os)
+        } else {
+            //Editar OS
+            //Gerar OS
+            //Criar um objeto para armazenar os dados da OS antes de enviar ao main
+            const os = {
+                id_OS: idOS.value,
+                idClient_OS: idClient.value,
+                stat_OS: statusOS.value,
+                computer_OS: computer.value,
+                serial_OS: serial.value,
+                problem_OS: problem.value,
+                obs_OS: obs.value,
+                specialist_OS: specialist.value,
+                diagnosis_OS: diagnosis.value,
+                parts_OS: parts.value,
+                total_OS: total.value
+            }
+            // Enviar ao main o objeto os - (Passo 2: fluxo)
+            // uso do preload.js
+            api.updateOS(os)
+        }
+    }
+})
+
+// == Fim CRUD Create/Update ==================================
+// ============================================================
+
+// ============================================================
+// == CRUD Delete =============================================
+
+function removeOS() {
+    console.log(idOS.value) // Passo 1 (receber do form o id da OS)
+    api.deleteOS(idOS.value) // Passo 2 (enviar o id da OS ao main)
+}
+
+// == Fim - CRUD Delete =======================================
+// ============================================================
 
 // ============================================================
 // == Reset form ==============================================
@@ -180,12 +259,12 @@ api.resetForm((args) => {
 // == Fim - reset form ========================================
 // ============================================================
 
-// === Imprimir OS ==============================================
-// ==============================================================
+// === Imprimir OS =============================================
+// =============================================================
 
 function generateOS(){
     api.printOS()
 }
 
-// === Fim - Imprimir OS ==============================================
+// === Fim - Imprimir OS ========================================
 // ==============================================================
