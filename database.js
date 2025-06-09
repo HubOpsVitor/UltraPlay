@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const url = 'mongodb+srv://admin:123senac@projetoestudo.qp8p0.mongodb.net/dbultraplay'
+const url = 'mongodb://localhost:27017/'
 let conectado = false
 const conectar = async () => {
     if (!conectado) {
