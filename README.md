@@ -30,7 +30,6 @@ A **UltraPlay!** é um sistema de gerenciamento interno voltado para controle de
 
 ### Ordem de Serviço
 ![Tela Ordem](src/public/img/TelaOrdem.png)
-![Tela Ordem 2](src/public/img/TelaOrdem2.png)
 ![Tela Ordem 1](src/public/img/TelaOrdem1.png)
 
 ### Relatórios
