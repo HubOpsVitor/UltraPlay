@@ -563,7 +563,7 @@ Peças Utilizadas: Compatíveis e de procedência conhecida. Peças originais po
 (Art. 6º, I do CDC)
 Dados Pessoais: Protegidos pela LGPD e usados apenas para fins técnicos e administrativos.
 (Lei nº 13.709/2018 – LGPD)`
-                        doc.text(termo, 14, 130, { maxWidth: 180 })
+                        doc.text(termo, 14, 150, { maxWidth: 170 })
                         const tempDir = app.getPath('temp')
                         const filePath = path.join(tempDir, 'os.pdf')
                         doc.save(filePath)
